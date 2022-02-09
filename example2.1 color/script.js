@@ -5,14 +5,14 @@ import rhino3dm from "https://cdn.jsdelivr.net/npm/rhino3dm@7.11.1/rhino3dm.modu
 import { RhinoCompute } from "https://cdn.jsdelivr.net/npm/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js";
 import { Rhino3dmLoader } from "https://cdn.jsdelivr.net/npm/three@0.124.0/examples/jsm/loaders/3DMLoader.js";
 
-const definitionName = "rnd_node.gh";
+const definitionName = "Canopy Divs.gh";
 
 // Set up sliders
-const radius_slider = document.getElementById("radius");
+const radius_slider = document.getElementById("U Divisions");
 radius_slider.addEventListener("mouseup", onSliderChange, false);
 radius_slider.addEventListener("touchend", onSliderChange, false);
 
-const count_slider = document.getElementById("count");
+const count_slider = document.getElementById("V Divisions");
 count_slider.addEventListener("mouseup", onSliderChange, false);
 count_slider.addEventListener("touchend", onSliderChange, false);
 
@@ -42,10 +42,10 @@ rhino3dm().then(async (m) => {
 });
 
 async function compute() {
-  const param1 = new RhinoCompute.Grasshopper.DataTree("Radius");
+  const param1 = new RhinoCompute.Grasshopper.DataTree("U Divisions");
   param1.append([0], [radius_slider.valueAsNumber]);
 
-  const param2 = new RhinoCompute.Grasshopper.DataTree("Count");
+  const param2 = new RhinoCompute.Grasshopper.DataTree("V Divisions");
   param2.append([0], [count_slider.valueAsNumber]);
 
   // clear values
@@ -72,6 +72,7 @@ async function compute() {
       for (const d of value) {
         const data = JSON.parse(d.data);
         const rhinoObject = rhino.CommonObject.decode(data);
+        //console.log(rhinoObject)
         doc.objects().add(rhinoObject, null);
       }
     }
@@ -86,6 +87,7 @@ async function compute() {
   
     const rhinoObject = objects.get( i );
 
+    //console.log(rhinoObject.geometry())
 
      // asign geometry userstrings to object attributes
     if ( rhinoObject.geometry().userStringCount > 0 ) {
@@ -109,6 +111,7 @@ async function compute() {
     // go through all objects, check for userstrings and assing colors
 
     object.traverse((child) => {
+      console.log(child)
       if (child.isLine) {
 
         if (child.userData.attributes.geometry.userStringCount > 0) {
