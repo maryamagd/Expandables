@@ -5,16 +5,16 @@ import rhino3dm from "https://cdn.jsdelivr.net/npm/rhino3dm@7.11.1/rhino3dm.modu
 import { RhinoCompute } from "https://cdn.jsdelivr.net/npm/compute-rhino3d@0.13.0-beta/compute.rhino3d.module.js";
 import { Rhino3dmLoader } from "https://cdn.jsdelivr.net/npm/three@0.124.0/examples/jsm/loaders/3DMLoader.js";
 
-const definitionName = "Canopy Divs.gh";
+const definitionName = "Exp Gh.gh";
 
 // Set up sliders
-const radius_slider = document.getElementById("U Divisions");
-radius_slider.addEventListener("mouseup", onSliderChange, false);
-radius_slider.addEventListener("touchend", onSliderChange, false);
+const Scale_slider = document.getElementById("Scale");
+Scale_slider.addEventListener("mouseup", onSliderChange, false);
+Scale_slider.addEventListener("touchend", onSliderChange, false);
 
-const count_slider = document.getElementById("V Divisions");
-count_slider.addEventListener("mouseup", onSliderChange, false);
-count_slider.addEventListener("touchend", onSliderChange, false);
+const Expansion_slider = document.getElementById("Expansion");
+Expansion_slider.addEventListener("mouseup", onSliderChange, false);
+Expansion_slider.addEventListener("touchend", onSliderChange, false);
 
 const loader = new Rhino3dmLoader();
 loader.setLibraryPath("https://cdn.jsdelivr.net/npm/rhino3dm@0.15.0-beta/");
@@ -42,11 +42,11 @@ rhino3dm().then(async (m) => {
 });
 
 async function compute() {
-  const param1 = new RhinoCompute.Grasshopper.DataTree("U Divisions");
-  param1.append([0], [radius_slider.valueAsNumber]);
+  const param1 = new RhinoCompute.Grasshopper.DataTree("Scale");
+  param1.append([0], [Scale_slider.valueAsNumber]);
 
-  const param2 = new RhinoCompute.Grasshopper.DataTree("V Divisions");
-  param2.append([0], [count_slider.valueAsNumber]);
+  const param2 = new RhinoCompute.Grasshopper.DataTree("Expansion");
+  param2.append([0], [Expansion_slider.valueAsNumber]);
 
   // clear values
   const trees = [];
@@ -112,7 +112,7 @@ async function compute() {
 
     object.traverse((child) => {
       console.log(child)
-      if (child.isLine) {
+      if (child.isMesh) {
 
         if (child.userData.attributes.geometry.userStringCount > 0) {
           
@@ -122,7 +122,7 @@ async function compute() {
 
           //convert color from userstring to THREE color and assign it
           const threeColor = new THREE.Color("rgb(" + col + ")");
-          const mat = new THREE.LineBasicMaterial({ color: threeColor });
+          const mat = new THREE.MeshBasicMaterial({ color: threeColor });
           child.material = mat;
         }
       }
@@ -150,12 +150,12 @@ function init() {
   scene = new THREE.Scene();
   scene.background = new THREE.Color(1, 1, 1);
   camera = new THREE.PerspectiveCamera(
-    30,
+    75,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
   );
-  camera.position.z = 200;
+  camera.position.z = -30;
 
   // create the renderer and add it to the html
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -192,21 +192,4 @@ function meshToThreejs(mesh, material) {
   const loader = new THREE.BufferGeometryLoader();
   const geometry = loader.parse(mesh.toThreejsJSON());
   return new THREE.Mesh(geometry, material);
-}
-// download button handler
-function download () {
-  let buffer = doc.toByteArray()
-  let blob = new Blob([ buffer ], { type: "application/octect-stream" })
-  let link = document.createElement('a')
-  link.href = window.URL.createObjectURL(blob)
-  link.download = 'Canopy.3dm'
-  link.click()
-}
-
-function showSpinner() {
-  document.getElementById('loader').style.display = 'block'
-}
-
-function hideSpinner() {
-  document.getElementById('loader').style.display = 'none'
 }
