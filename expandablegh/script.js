@@ -193,3 +193,20 @@ function meshToThreejs(mesh, material) {
   const geometry = loader.parse(mesh.toThreejsJSON());
   return new THREE.Mesh(geometry, material);
 }
+// download button handler
+function download () {
+  let buffer = doc.toByteArray()
+  let blob = new Blob([ buffer ], { type: "application/octect-stream" })
+  let link = document.createElement('a')
+  link.href = window.URL.createObjectURL(blob)
+  link.download = 'Canopy.3dm'
+  link.click()
+}
+
+function showSpinner() {
+  document.getElementById('loader').style.display = 'block'
+}
+
+function hideSpinner() {
+  document.getElementById('loader').style.display = 'none'
+}
