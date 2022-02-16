@@ -112,7 +112,7 @@ async function compute() {
 
     object.traverse((child) => {
       console.log(child)
-      if (child.isMesh) {
+      if (child.isLine) {
 
         if (child.userData.attributes.geometry.userStringCount > 0) {
           
@@ -122,7 +122,7 @@ async function compute() {
 
           //convert color from userstring to THREE color and assign it
           const threeColor = new THREE.Color("rgb(" + col + ")");
-          const mat = new THREE.MeshBasicMaterial({ color: threeColor });
+          const mat = new THREE.LineBasicMaterial({ color: threeColor });
           child.material = mat;
         }
       }
