@@ -7,6 +7,10 @@ import { Rhino3dmLoader } from "https://cdn.jsdelivr.net/npm/three@0.124.0/examp
 
 const definitionName = "Exp Gh.gh";
 
+//calling download function
+const downloadButton = document.getElementById("downloadButton")
+downloadButton.onclick = download
+
 // Set up sliders
 const Scale_slider = document.getElementById("Scale");
 Scale_slider.addEventListener("mouseup", onSliderChange, false);
@@ -199,7 +203,7 @@ function download () {
   let blob = new Blob([ buffer ], { type: "application/octect-stream" })
   let link = document.createElement('a')
   link.href = window.URL.createObjectURL(blob)
-  link.download = 'Canopy.3dm'
+  link.download = 'Expandable.3dm'
   link.click()
 }
 
